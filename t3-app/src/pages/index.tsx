@@ -1,11 +1,13 @@
 import { SignIn, SignInButton, SignOutButton, useUser } from "@clerk/nextjs";
 import { type NextPage } from "next";
 import Head from "next/head";
-
+import { api } from "~/utils/api";
 
 const Home: NextPage = () => {
 
   const user = useUser();
+
+  const {data} = api.example.getAll.useQuery()
 
   return (
     <>
