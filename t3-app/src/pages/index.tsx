@@ -17,6 +17,7 @@ const Home: NextPage = () => {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <main className="flex justify-center h-screen">
+        <h1>login</h1>
         <div className="h-full w-full border-x md:max-w-2xl">
         <div>
           {!user.isSignedIn && <SignInButton/>}
