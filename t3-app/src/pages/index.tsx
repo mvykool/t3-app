@@ -3,9 +3,24 @@ import { type NextPage } from "next";
 import Head from "next/head";
 import { api } from "~/utils/api";
 
+const CreatePostWizard = () => {
+
+  const {user }= useUser();
+
+  if(!user) return null;
+
+  return (
+    <div>
+       <img src={user.profileImageUrl} alt="profile-img" className="h-14  w-14 rounded-full" />
+    </div>
+  );
+};
+
 const Home: NextPage = () => {
 
   const user = useUser();
+
+  console.log(user);
 
   const {data} = api.posts.getAll.useQuery()
 
@@ -20,10 +35,14 @@ const Home: NextPage = () => {
         <div className="h-full w-full border-x md:max-w-2xl">
         <div>
           {!user.isSignedIn && <SignInButton/>}
-          {!!user.isSignedIn && <SignOutButton/>}
+          {user.isSignedIn && <CreatePostWizard/>}
         </div>
         <div>
-          {data?.map((post) => ( <div key={post.id} >{post.content}</div>))}
+          {data?.map(({ post, author }) => ( 
+          <div key={post.id} >
+            {post.content}
+            </div>
+            ))}
         </div>
         </div>
       <SignIn path="/sign-in" routing="path" signUpUrl="/sign-up" />
