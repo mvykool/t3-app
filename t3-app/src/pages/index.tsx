@@ -6,6 +6,7 @@ import type {RouterOutputs} from "~/utils/api";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
 import Image from "next/image";
+import { useState } from "react";
 
 dayjs.extend(relativeTime);
 
@@ -13,12 +14,31 @@ const CreatePostWizard = () => {
 
   const {user }= useUser();
 
+  const ctx = api.useContext();
+
+  const {mutate, isLoading: isPosting} = api.posts.create.useMutation({
+    onSuccess:  () => {
+      setInput("");
+      void ctx.posts.getAll.invalidate();
+    },
+  });
+
+  const [input, setInput] = useState("");
+
   if(!user) return null;
 
   return (
     <div className="border-gray-300 border-b-2 p-4 flex gap-3 items-center">
       <Image src={user.profileImageUrl} alt="profile-img" className="h-14  w-14 rounded-full" width="80" height="80" />
-      <input type="text" placeholder="type your emoji" className="h-10 flex-1 rounded-xl bg-gray-800 px-2"  />
+      <input 
+      type="text" 
+      placeholder="type your emoji"
+      className="h-10 flex-1 rounded-xl bg-gray-800 px-2"
+      value={input}
+      onChange={(e) => setInput(e.target.value)} 
+      disabled={isPosting}
+      />
+      <button onClick={() => mutate({content: input})}>post</button>
     </div>
   );
 };
